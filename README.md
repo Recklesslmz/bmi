@@ -1,6 +1,6 @@
 # bmi
 
-> A Vue.js project
+> 一个简易的BMI计算器（正在开发.....）
 
 ## Build Setup
 
