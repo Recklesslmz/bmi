@@ -1,7 +1,7 @@
 {
   "name": "bmi",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "一个简易的BMI计算器",
   "author": "muzi.sunjing@gmail.com",
   "private": true,
   "scripts": {
