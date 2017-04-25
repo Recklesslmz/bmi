@@ -22,6 +22,10 @@
           </span>
         </div>
         <div class="height">
+          <span class="height_name">我的姓名：</span>
+          <span><input type="text" v-model="name"></span>
+        </div>
+        <div class="height">
           <span class="height_name">我的身高：</span>
           <span><input type="text" v-model="height">单位:厘米cm</span>
         </div>
@@ -43,27 +47,52 @@
       </div>
 
     </div>
+    <div class="charts" v-if='label.length >0'>
+      <chartjs-bar :datalabel="'BMI'" :data='mydata' :labels='label'></chartjs-bar>
+    </div>
   </div>
 
 </template>
 
 <script type="text/ecmascript-6">
+  let dataArray = []
+  let labelArray = []
   export default {
     data(){
       return {
-        height:'',
-        weight:'',
-        calculateValue:'',
-        isShow:false
+        height: '',
+        weight: '',
+        calculateValue: '',
+        isShow: false,
+        myboolean: false,
+        name: '',
+        // mydata:this.mydata = JSON.parse(window.localStorage.getItem('mydata')),
+        // label:this.label = JSON.parse(window.localStorage.getItem('label'))
+        mydata: [],
+        label: []
       }
     },
-    methods:{
+    mounted(){
+      this.$nextTick(this.getInfo())
+    },
+    methods: {
+      getInfo(){
+        this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
+        this.label = JSON.parse(window.localStorage.getItem('label'))
+      },
       calculate(){
-        let height = this.height/100
+        let height = this.height / 100
         let weight = this.weight
-        this.calculateValue = (weight /(Math.pow(height,2))).toFixed(2)
-        console.log(this.calculateValue)
 
+        this.calculateValue = (weight / (Math.pow(height, 2))).toFixed(2)
+        dataArray.push(this.calculateValue)
+        labelArray.push(this.name)
+        console.log(dataArray)
+        window.localStorage.setItem('mydata', JSON.stringify(dataArray))
+        window.localStorage.setItem('label', JSON.stringify(labelArray))
+
+        this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
+        this.label = JSON.parse(window.localStorage.getItem('label'))
       }
     }
   }
