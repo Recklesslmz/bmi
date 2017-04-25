@@ -9,18 +9,18 @@
         <div class="calculate_title">免费计算你的身体质量指数(BMI)</div>
         <div class="calculate_value" v-show='calculateValue != ""'>
           <div>
-            你的BMI值：{{calculateValue}},身体状态：正常
+            你的BMI值：{{calculateValue}},身体状态：{{calculateStatus}}
           </div>
         </div>
-        <div class="unit">
-          <span class="unit_name">质量单位：</span>
-          <span>
-            <input type="radio" name='radio_bmi'><span class="names">公制</span>
-          </span>
-          <span>
-            <input type="radio" name='radio_bmi'><span class="names">英制</span>
-          </span>
-        </div>
+        <!--<div class="unit">-->
+        <!--<span class="unit_name">质量单位：</span>-->
+        <!--<span>-->
+        <!--<input type="radio" name='radio_bmi'><span class="names">公制</span>-->
+        <!--</span>-->
+        <!--<span>-->
+        <!--<input type="radio" name='radio_bmi'><span class="names">英制</span>-->
+        <!--</span>-->
+        <!--</div>-->
         <div class="height">
           <span class="height_name">我的姓名：</span>
           <span><input type="text" v-model="name"></span>
@@ -33,15 +33,15 @@
           <span class="weight_name">我的体重：</span>
           <span><input type="text" v-model="weight">单位:千克kg</span>
         </div>
-        <div class="standard">
-          <span class="standard_name">BMI标准：</span>
-          <span>
-            <select>
-              <option>中国标准</option>
-              <option>国际标准</option>
-            </select>
-          </span>
-        </div>
+        <!--<div class="standard">-->
+        <!--<span class="standard_name">BMI标准：</span>-->
+        <!--<span>-->
+        <!--<select>-->
+        <!--<option>中国标准</option>-->
+        <!--<option>国际标准</option>-->
+        <!--</select>-->
+        <!--</span>-->
+        <!--</div>-->
 
         <button class="button" @click="calculate">计算BMI</button>
         <button class="button" @click="remove">清空数据</button>
@@ -67,6 +67,7 @@
         height: '',
         weight: '',
         calculateValue: '',
+        calculateStatus: '',
         isShow: false,
         myboolean: false,
         name: '',
@@ -93,8 +94,16 @@
       getInfo(){
         if (JSON.parse(window.localStorage.getItem('mydata')) != null) {
           this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
-          // console.log(this.mydata[this.mydata.length-1])
-          this.calculateValue = this.mydata[this.mydata.length-1]
+          this.calculateValue = this.mydata[this.mydata.length - 1]
+          if (this.calculateValue <= 18.4) {
+            this.calculateStatus = '偏瘦'
+          } else if (18.5 < this.calculateValue < 23.9) {
+            this.calculateStatus = '正常'
+          } else if (24.0 < this.calculateValue < 27.9) {
+            this.calculateStatus = '过重'
+          } else if (this.calculateValue > 29.0) {
+            this.calculateStatus = '肥胖'
+          }
         }
         if (JSON.parse(window.localStorage.getItem('label')) != null) {
           this.label = JSON.parse(window.localStorage.getItem('label'))
@@ -105,7 +114,15 @@
         let weight = this.weight
 
         this.calculateValue = (weight / (Math.pow(height, 2))).toFixed(2)
-
+        if (this.calculateValue <= 18.4) {
+          this.calculateStatus = '偏瘦'
+        } else if (18.5 < this.calculateValue < 23.9) {
+          this.calculateStatus = '正常'
+        } else if (24.0 < this.calculateValue < 27.9) {
+          this.calculateStatus = '过重'
+        } else if (this.calculateValue > 29.0) {
+          this.calculateStatus = '肥胖'
+        }
 
         dataArray.push(this.calculateValue)
         labelArray.push(this.name)
