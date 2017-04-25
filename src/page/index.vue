@@ -44,11 +44,15 @@
         </div>
 
         <button class="button" @click="calculate">计算BMI</button>
+        <button class="button" @click="remove">清空数据</button>
       </div>
 
     </div>
-    <div class="charts" v-if='label.length >0'>
-      <chartjs-bar :datalabel="'BMI'" :data='mydata' :labels='label'></chartjs-bar>
+    <div class="charts" v-if='label.length > 0'>
+      <!--<chartjs-bar :datalabel="'BMI'" :data='mydata' :labels='label'></chartjs-bar>-->
+      <canvas id="mix" count="2"></canvas>
+      <chartjs-line :datalabel="'BMI'" :data='mydata' :labels='label' target="mix"></chartjs-line>
+      <chartjs-bar :datalabel="'BMI'" :data='mydata' :labels='label' target="mix"></chartjs-bar>
     </div>
   </div>
 
@@ -66,33 +70,68 @@
         isShow: false,
         myboolean: false,
         name: '',
-        // mydata:this.mydata = JSON.parse(window.localStorage.getItem('mydata')),
-        // label:this.label = JSON.parse(window.localStorage.getItem('label'))
         mydata: [],
         label: []
       }
     },
     mounted(){
-      this.$nextTick(this.getInfo())
+      let localMyData = JSON.parse(window.localStorage.getItem('mydata'))
+      let localLabelArray = JSON.parse(window.localStorage.getItem('label'))
+      if (localMyData == null) {
+        dataArray = []
+      } else {
+        dataArray = localMyData
+      }
+      if (localLabelArray == null) {
+        localLabelArray = []
+      } else {
+        labelArray = localLabelArray
+      }
+      this.$nextTick(() => this.getInfo())
     },
     methods: {
       getInfo(){
         this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
+        console.log(this.mydata)
         this.label = JSON.parse(window.localStorage.getItem('label'))
+        console.log(this.label)
       },
       calculate(){
         let height = this.height / 100
         let weight = this.weight
 
         this.calculateValue = (weight / (Math.pow(height, 2))).toFixed(2)
+
+
         dataArray.push(this.calculateValue)
         labelArray.push(this.name)
-        console.log(dataArray)
+
+
+
+
         window.localStorage.setItem('mydata', JSON.stringify(dataArray))
         window.localStorage.setItem('label', JSON.stringify(labelArray))
 
+        this.getCurrentInfo()
+      }
+      ,
+      getCurrentInfo(){
         this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
         this.label = JSON.parse(window.localStorage.getItem('label'))
+        location.reload();
+      },
+      remove(){
+        window.localStorage.removeItem('mydata')
+        window.localStorage.removeItem('label')
+        location.reload();
+      }
+    },
+    watch: {
+      mydata: function (val, oldVal) {
+        this.mydata = val
+      },
+      label: function (val, oldVal) {
+        this.label = val
       }
     }
   }
