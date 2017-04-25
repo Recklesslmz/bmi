@@ -91,10 +91,14 @@
     },
     methods: {
       getInfo(){
-        this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
-        console.log(this.mydata)
-        this.label = JSON.parse(window.localStorage.getItem('label'))
-        console.log(this.label)
+        if (JSON.parse(window.localStorage.getItem('mydata')) != null) {
+          this.mydata = JSON.parse(window.localStorage.getItem('mydata'))
+          // console.log(this.mydata[this.mydata.length-1])
+          this.calculateValue = this.mydata[this.mydata.length-1]
+        }
+        if (JSON.parse(window.localStorage.getItem('label')) != null) {
+          this.label = JSON.parse(window.localStorage.getItem('label'))
+        }
       },
       calculate(){
         let height = this.height / 100
@@ -105,8 +109,6 @@
 
         dataArray.push(this.calculateValue)
         labelArray.push(this.name)
-
-
 
 
         window.localStorage.setItem('mydata', JSON.stringify(dataArray))
